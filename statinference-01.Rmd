@@ -1,7 +1,7 @@
 ---
 title: "Exponential Distribution Simulation"
 author: "mickfenneck"
-output: html_document
+output: pdf_document
 ---
 
 
