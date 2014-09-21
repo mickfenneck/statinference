@@ -1,0 +1,121 @@
+---
+title: "Tooth Growth on Guinea Pigs"
+author: "mickfenneck"
+output: pdf_document
+---
+
+
+
+Introduction
+========
+
+The project is meant to answer to this particular question:
+
+> Now in the second portion of the class, we're going to analyze the ToothGrowth data in the R datasets package. 
+
+> 1. Load the ToothGrowth data and perform some basic exploratory data analyses 
+> 2. Provide a basic summary of the data.
+> 3. Use confidence intervals and hypothesis tests to compare tooth growth by supp and dose. (Use the techniques from class even if there's other approaches worth considering)
+> 4. State your conclusions and the assumptions needed for your conclusions. 
+
+The Solution
+========
+### Analysis
+
+We first have to give a look at the dataset and describe what is contained. Online you can find a quick description of the dataset:
+
+Description
+The response is the length of odontoblasts (teeth) in each of 10 guinea pigs at each of three dose levels of Vitamin C (0.5, 1, and 2 mg) with each of two delivery methods (orange juice or ascorbic acid).
+
+Format
+A data frame with 60 observations on 3 variables.
+
+[,1]     len	 numeric	 Tooth length
+
+[,2]	 supp	 factor	 Supplement type (VC or OJ).
+
+[,3]	 dose	 numeric	 Dose in milligrams.
+
+```{r}
+set.seed(1994)
+data(ToothGrowth)
+str(ToothGrowth)
+summary(ToothGrowth)
+head(ToothGrowth)
+```
+
+We have a continuous dependent variable [len] and two independent variables, dose and suppliment, that are factors with 3 and 2 different treatment levels,
+
+```{r, echo=FALSE, fig.height = 4}
+par(mfrow=c(1,2))
+boxplot(len~supp, data=ToothGrowth, 
+  col = c("yellow", "orange"),
+  main = "Tooth Growth", 
+  xlab = "Suppliment",
+  ylab = "Tooth length")
+
+boxplot(len~dose, data=ToothGrowth, 
+  col = c("yellow", "orange", "cyan"),
+  main = "Tooth Growth", 
+  xlab = "Dose",
+  ylab = "Tooth length")
+```
+
+```{r, echo=FALSE, fig.height = 4}
+par(mfrow=c(1,1))
+boxplot(len ~ dose, data = ToothGrowth,
+        boxwex = 0.25, at = 1:3 - 0.2,
+        subset = supp == "VC", col = "yellow",
+        main = "Guinea Pigs' Tooth Growth",
+        xlab = "Vitamin C dose mg",
+        ylab = "tooth length",
+        xlim = c(0.5, 3.5), ylim = c(0, 35), yaxs = "i")
+boxplot(len ~ dose, data = ToothGrowth, add = TRUE,
+        boxwex = 0.25, at = 1:3 + 0.2,
+        subset = supp == "OJ", col = "orange")
+legend(2, 9, c("Ascorbic acid", "Orange juice"),
+       fill = c("yellow", "orange"))
+```
+
+### Comparing Dosage Levels
+Using the t.test function given by default we can display the t statistic values
+
+``` {r dosage level tests, echo=FALSE}
+vc05 <- ToothGrowth[1:10, 1]
+vc1 <- ToothGrowth[11:20, 1]
+vc2 <- ToothGrowth[21:30, 1]
+oj05 <- ToothGrowth[31:40, 1]
+oj1 <- ToothGrowth[41:50, 1]
+oj2 <- ToothGrowth[51:60, 1]
+
+vc1vs05 <- t.test(vc1, vc05)
+vc2vs1 <- t.test(vc2, vc1)
+oj1vs05 <- t.test(oj1, oj05)
+oj2vs1 <- t.test(oj2, oj1)
+
+dosageLevelTable <- 
+      data.frame(round(c(vc1vs05$statistic, vc2vs1$statistic, oj1vs05$statistic, oj2vs1$statistic), 3),
+                 round(c(vc1vs05$parameter, vc2vs1$parameter, oj1vs05$parameter, oj2vs1$parameter), 3),
+                 c(vc1vs05$p.value, vc2vs1$p.value, oj1vs05$p.value, oj2vs1$p.value),
+                 c(toString(round(vc1vs05$conf.int, 3)), 
+                   toString(round(vc2vs1$conf.int, 3)), 
+                   toString(round(oj1vs05$conf.int, 3)), 
+                   toString(round(oj2vs1$conf.int, 3))),
+                 c(toString(round(vc1vs05$estimate, 3)),
+                   toString(round(vc2vs1$estimate, 3)),
+                   toString(round(oj1vs05$estimate, 3)),
+                   toString(round(oj2vs1$estimate, 3))))
+                
+                 
+colnames(dosageLevelTable) <- c("t", "df", "p-value", "conf interval", "sample estimates")
+rownames(dosageLevelTable) <- c("VC 1.0 vs 0.5:  ", "VC 2.0 vs 1.0:  ", "OJ 1.0 vs 0.5:  ", "OJ 2.0 vs 1.0:  ")
+
+dosageLevelTable
+
+
+```
+
+The table explains, as we should imagine, that ther is a correlation between the assumption of a major dosage of vitamine C and the growth of the teeth.
+
+### Conclusion
+We can finally state that the somministration of vitamine C in guinea pigs can determine an increase of the teeth growth in the animal.

@@ -1,7 +1,7 @@
 ---
 title: "Exponential Distribution Simulation"
 author: "mickfenneck"
-output: html_document
+output: pdf_document
 ---
 
 
@@ -104,7 +104,3 @@ hist(means, breaks=50, prob=TRUE,
 # show the two CIs
 abline(v=c(ll, ul), col="red", lwd=3)
 ```
-
-## Code Reproducibility
-
-You can reproduce the code how many times you want. The R source is available on github.com at https://github.com/mickfenneck/statinference.
