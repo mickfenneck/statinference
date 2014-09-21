@@ -66,12 +66,12 @@ We can quickly provide a graphical rappresentation by plotting the data.
 ```{r, fig.height=4}
 # plot the histogram of the means
 hist(means, breaks=50, prob=TRUE,
-     main="Distribution of means of 1000 samples having a lambda of 0.2",
-     xlab="Means of 40 Exponential Distributions",
+     main="Distribution of means",
+     xlab="Exponential Distributions Means",
      ylab="Density")
-lines(density(means), col="blue", lwd=2, lty=2)
+lines(density(means), col="green", lwd=2, lty=2)
 # show the mean of distribution
-abline(v=1/lambda, col="red", lwd=3)
+abline(v=1/lambda, col="blue", lwd=3)
 ```
 
 The plot shows that the distribution get close to the normal distribution. 
@@ -80,7 +80,7 @@ Using a QQplot we can show that the distribution is very similar to the normal, 
 
 ```{r}
 qqnorm(means, col="red", lwd=3)
-qqline(means, col="black", lwd=3)
+qqline(means, col="green", lwd=3)
 ```
 
 ###Final consideration
@@ -98,8 +98,8 @@ Lower interval ```r round(ll, 3)``` and upper interval  ```r round(ul, 3)```.
 ```{r, fig.height=4}
 # plot the histogram of the means
 hist(means, breaks=50, prob=TRUE,
-     main="Distribution of means of 1000 samples having a lambda of 0.2",
-     xlab="Means of 40 Exponential Distributions",
+     main="Distribution of means",
+     xlab="Exponential Distributions Means",
      ylab="Density")
 # show the two CIs
 abline(v=c(ll, ul), col="red", lwd=3)
